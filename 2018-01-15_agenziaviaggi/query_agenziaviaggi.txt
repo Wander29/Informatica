@@ -1,0 +1,91 @@
+==========================================================================================================================
+========== 1)
+SELECT pacchetto.*, pacchetto.prezzo*acquisti.quantita AS TotaleParziale
+FROM pacchetto, cliente, acquisti
+WHERE cliente.CodCli = 10
+	AND cliente.CodCli = acquisti.CodCli
+	AND pacchetto.CodPac = acquisti.CodPac
+
+==========================================================================================================================
+========== 2)
+SELECT pac.CodPac, pac.descr, SUM(ac.quantita) AS QuantitaVenduta
+FROM pacchetto AS pac, acquisti AS ac
+WHERE pac.CodTO = 'STM'
+    AND ac.CodPac = pac.CodPac
+GROUP BY pac.CodPac
+
+==========================================================================================================================
+========== 3)
+SELECT pac.CodPac, pac.descr, ac.quantita AS QuantitaAcquistata
+FROM pacchetto AS pac, acquisti AS ac, cliente AS cli
+WHERE ac.CodCli = cli.CodCli
+    AND ac.CodPac = pac.CodPac
+    AND cli.Nome = 'Rossella'
+    AND cli.Cognome = 'Fedeli'// oppure      /* AND cli.nome LIKE '%[VARIABLE]%' */
+
+==========================================================================================================================
+========== 4)
+SELECT pac.CodPac, pac.descr, ac.quantita AS QuantitaAcquistata
+FROM pacchetto AS pac, acquisti AS ac, cliente AS cli
+WHERE ac.CodCli = cli.CodCli
+    AND ac.CodPac = pac.CodPac
+    AND cli.CodCli = 6
+
+==========================================================================================================================
+========== 5)
+SELECT SUM(pac.Prezzo*ac.quantita) AS Totale
+FROM pacchetto AS pac, acquisti AS ac, cliente AS cl
+WHERE ac.DataAcquisto BETWEEN '2014-11-03' AND '2014-11-10'
+	AND ac.CodCli = cl.CodCli
+    AND ac.CodPac = pac.CodPac
+
+//oppure
+SELECT SUM(pac.Prezzo*ac.quantita) AS Totale, MIN(ac.DataAcquisto) AS 'Dal', MAX(ac.DataAcquisto) AS 'Al'
+FROM pacchetto AS pac, acquisti AS ac, cliente AS cl
+WHERE ac.DataAcquisto BETWEEN MIN(ac.DataAcquisto) AND MAX(ac.DataAcquisto)
+	AND ac.CodCli = cl.CodCli
+    AND ac.CodPac = pac.CodPac
+
+==========================================================================================================================
+========== 6)
+SELECT ac.CodPac, ac.DataAcquisto, SUM(pac.prezzo*ac.quantita) AS TotaleAcquisto
+FROM acquisti AS ac, pacchetto AS pac
+WHERE ac.CodPac = pac.CodPac
+GROUP BY ac.CodAcq //se sei stupido a scrivere: GROUP BY ac.CodPac
+ORDER BY ac.CodPac ASC
+
+==========================================================================================================================
+========== 7)
+SELECT ROUND(AVG(pacchetto.Prezzo),2) AS PrezzoMedio, MIN(pacchetto.Prezzo) AS PrezzoMinimo, MAX(pacchetto.Prezzo) AS PrezzoMassimo
+FROM pacchetto
+//round = arrotondamento a tot cifre speicficate dopo la virgola
+
+==========================================================================================================================
+========== 8)
+SELECT pac.CodPac, pac.Descr, pac.Prezzo
+FROM pacchetto AS pac
+WHERE pac.Modalita LIKE '%Bed%'
+// la percentuale indica zero o più caratteri che possono frapporsi fra la parola indicata
+
+==========================================================================================================================
+========== 9)
+SELECT pac.CodPac, pac.descr, SUM(ac.quantita) AS QuantitaVenduta
+FROM pacchetto AS pac, acquisti AS ac, cliente AS cli
+WHERE ac.CodPac = pac.CodPac
+	AND cli.CodCli = ac.CodCli
+GROUP BY pac.CodPac
+HAVING SUM(ac.quantita)>=2
+//Having è fondamentale poichè è lui che poi fa il confronto e seleziona quali righe mostrare e quali no
+
+==========================================================================================================================
+========== 10) Contare il numero di pacchetti venduti (in generale) almeno 3 volte
+
+SELECT COUNT(*) AS Numero_Pacchetti_Piu_Di_2_Venduti
+FROM (SELECT pacchetto.CodPac, SUM(acquisti.quantita) AS QntVen
+    FROM pacchetto, acquisti
+    WHERE pacchetto.CodPac = acquisti.CodPac
+    GROUP BY pacchetto.CodPac
+    HAVING QntVen > 2) AS Tabella
+//fa il COUNT nella tabella derivata (la tabella risultante dalla somma e dal raggruppamento)
+
+========================================================================================================================== 

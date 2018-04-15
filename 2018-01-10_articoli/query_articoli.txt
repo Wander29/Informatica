@@ -1,0 +1,60 @@
+================================================================================================================
+========== 1) Selezionare tutte le informazioni di articolo ed argomento
+select *
+from articolo,argomento
+where articolo.Codice_Argomento = argomento.FK_Articolo
+
+================================================================================================================
+========== 2) Selezionare tutti i campi di articolo, argomento e rivista
+select *
+from articolo,argomento,rivista 
+where articolo.Codice_Argomento = argomento.FK_Articolo AND articolo.Codice_Argomento = rivista.FK_Articolo
+
+================================================================================================================
+========== 3) Selezionare tutti gli articoli scritti prima del 31/01/2014 (attenzione alla metodologia di scrittura della data) con dettaglio data, titolo e sottotitolo visualizzando l'output in ordine crescente
+select data, titolo, sottotitolo
+from articolo 
+where data < '2014-01-31'  ORDER BY data ASC //ordina i record precedenti alla data in ordine ascendente in base alla stessa.
+
+================================================================================================================
+========== 4a) Selezionare articoli con dettaglio titoli e date scritti dall'autore "James Lee Stephen" (con ricerca codice)
+select articolo.titolo, autore.Nome
+from articolo, firma, autore 
+where articolo.ID_Articolo = firma.FK_Articolo AND autore.CodAutore = firma.FK_Autore AND autore.CodAutore = 3
+
+================================================================================================================
+========== 4b) Selezionare articoli con dettaglio titoli e date scritti dall'autore "James Lee Stephen" (con ricerca stringa cognome)
+select articolo.titolo, autore.Nome
+from articolo, firma, autore 
+where articolo.ID_Articolo = firma.FK_Articolo AND autore.CodAutore = firma.FK_Autore AND autore.Nome = 'Stephen' AND autore.Cognome = 'James Lee'
+
+================================================================================================================
+========== 5a) Contare il numero degli articoli scritti da ogni autore con codice e cognome
+select autore.Nome, count(*) as Numero_Articoli
+from articolo, firma, autore
+where articolo.ID_Articolo = firma.FK_Articolo AND autore.CodAutore = firma.FK_Autore GROUP BY autore.CodAutore 
+// ogni volta che vado a contare un campo devo affiancare la parola COUNT con il GROUP BY
+
+================================================================================================================
+========== 5b) Contare il numero degli articoli scritti da un autore con codice e cognome
+select autore.Nome, count(*) as Numero_Articoli
+from articolo, firma, autore
+where articolo.ID_Articolo = firma.FK_Articolo AND autore.CodAutore = firma.FK_Autore AND autore.Nome = 'Stephen' AND autore.Cognome = 'James Lee' GROUP BY autore.CodAutore
+
+================================================================================================================
+========== 6) Selezionare articoli di un determinato autore inserito dall'utente da tastiera
+SELECT aut.cognome, art.titolo, art.sottotitolo
+FROM autore AS aut, articolo AS art, firma AS fir
+WHERE aut.CodAutore LIKE '%:atr'
+	AND fir.FK_Autore = aut.CodAutore 
+	AND fir.FK_Articolo = art.ID_articolo 
+// ':atr' è un parametro della query. Per inserire il suo valore va attivato 'Parametri Bind'. il ':' indica che è un parametro 
+
+================================================================================================================
+========== 7) Contare quanti articoli sono stati scritti per data
+SELECT COUNT(*) AS 'Articoli Scritti', articolo.data
+FROM articolo
+GROUP BY articolo.data
+ORDER BY articolo.data
+
+================================================================================================================

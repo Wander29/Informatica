@@ -1,0 +1,48 @@
+§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+§§§§§§§§§ LUDOVICO VENTURI §§§§§§§§§
+§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+==========================================================================================================================
+========== 1)
+SELECT p.CodPac, p.Descr, a.quantità
+FROM pacchetto AS p, cliente AS c, acquisti AS a
+WHERE c.CodCli = a.CodCli
+	AND p.CodPac = a.CodPac
+	AND c.Cognome = "Fedeli"
+    AND c.Nome = "Rossella"
+
+==========================================================================================================================
+========== 2) 
+SELECT pacchetto.CodPac, pacchetto.Descr, acquisti.quantità
+FROM pacchetto, acquisti, touroperator
+WHERE touroperator.CodTO = "STM"
+	AND pacchetto.CodTO = touroperator.CodTO
+	AND acquisti.CodPac = pacchetto.CodPac
+
+//Oppure
+SELECT pacchetto.CodPac, pacchetto.Descr, acquisti.quantità
+FROM pacchetto, acquisti
+WHERE pacchetto.CodTO = "STM"
+	AND acquisti.CodPac = pacchetto.CodPac
+
+==========================================================================================================================
+========== 3)
+SELECT p.CodPac, a.DataAcquisto, SUM(p.Prezzo * a.quantità) AS Importo
+FROM pacchetto AS p, cliente AS c, acquisti AS a
+WHERE p.CodPac = a.CodPac
+	AND a.CodCli = c.CodCli
+GROUP BY p.CodPac
+
+==========================================================================================================================
+========== 4)
+SELECT ROUND(AVG(p.Prezzo),2) AS PrezzoMedio, MAX(p.Prezzo) AS PrezzoMassimo, MIN(p.Prezzo) AS PrezzoMinimo
+FROM pacchetto AS p
+
+==========================================================================================================================
+========== 5)
+SELECT pacchetto.CodPac, COUNT(*) AS VolteVenduto, pacchetto.Descr
+FROM acquisti, pacchetto
+WHERE pacchetto.CodPac = acquisti.CodPac
+GROUP BY acquisti.CodPac
+HAVING VolteVenduto >= 2
+
+==========================================================================================================================

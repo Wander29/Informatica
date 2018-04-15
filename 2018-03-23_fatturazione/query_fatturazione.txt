@@ -1,0 +1,78 @@
+TABELLE= fattura, cliente, uniscifatart, articolo
+==========================================================================================================================
+========== 1) Visualizzare tutti gli articoli, con dettaglio di tutte le informazioni ad essi relative, venduti nella fattura n. 2.
+SELECT a.*, u.quantità AS Quantità
+FROM articolo AS a, fattura AS f, uniscifatart AS u
+WHERE f.Numero = u.id_fattura 
+	AND u.id_articolo = a.ID_articolo
+	AND f.Numero = 2
+//
+SELECT a.*, u.quantità AS Quantità
+FROM articolo AS a, uniscifatart AS u
+WHERE u.id_fattura = 2 
+	AND u.id_articolo = a.ID_articolo
+
+==========================================================================================================================
+========== 2) Selezionare tutte le fatture del cliente Nobis di Torino con dettaglio numero fattura, descrizione articolo e quantità venduta. (ricerca tramite Codice Cliente numerico).
+SELECT f.Numero, a.descrizione, u.quantità
+FROM articolo AS a, fattura AS f, uniscifatart AS u, cliente AS c
+WHERE c.CodCli = f.CodCli
+	AND f.numero = u.id_fattura 
+	AND u.id_articolo = a.ID_articolo
+	AND c.CodCli = 2
+
+==========================================================================================================================
+========== 2bis) Selezionare tutte le fatture del cliente Nobis di Torino con dettaglio numero fattura, descrizione articolo e quantità venduta. (ricerca tramite Nome cliente e città).
+SELECT f.Numero, a.descrizione, u.quantità
+FROM articolo AS a, fattura AS f, uniscifatart AS u, cliente AS c
+WHERE c.CodCli = f.CodCli
+	AND f.numero = u.id_fattura 
+	AND u.id_articolo = a.ID_articolo
+	AND c.RagioneSociale = "Nobis"
+	AND c.città = "Torino"
+
+==========================================================================================================================
+========== 3) Calcolare il fatturato totale delle fatture emesse specificando il periodo (con data prima fattura e data ultima fattura)
+SELECT MIN(f.Data) AS DataInizio, MAX(f.Data) AS DataFine, ROUND(SUM(u.quantità*a.prezzoUnit),2) AS Totale
+FROM articolo AS a, fattura AS f, uniscifatart AS u
+WHERE f.Numero = u.id_fattura
+	AND u.id_articolo = a.ID_articolo
+
+==========================================================================================================================
+========== 4) Calcolare l’importo totale di ogni singola fattura ed elencarle con numero e data.
+SELECT f.numero, f.Data, ROUND(SUM(u.quantità*a.prezzoUnit),2) AS Totale
+FROM articolo AS a, fattura AS f, uniscifatart AS u
+WHERE f.Numero = u.id_fattura
+	AND u.id_articolo = a.ID_articolo
+GROUP BY f.Numero
+
+==========================================================================================================================
+========== 5) Visualizzare, per ogni fattura, il dettaglio delle righe che la compongono con data, descrizione articoli, quantità, prezzo unitario, prezzo totale.
+SELECT f.Numero AS NumFattura, f.data, a.descrizione, u.quantità, a.prezzoUnit, a.prezzoUnit*u.quantità AS PrezzoTotale
+FROM articolo AS a, fattura AS f, uniscifatart AS u
+WHERE f.Numero = u.id_fattura 
+	AND u.id_articolo = a.ID_articolo
+ORDER BY f.Numero
+
+==========================================================================================================================
+========== 6) Visualizza il prezzo unitario medio, quello massimo e quello minimo.
+SELECT ROUND(AVG(a.prezzoUnit),2) AS PrezzoMedio, MAX(a.prezzoUnit) AS PrezzoMinimo, MIN(a.prezzoUnit) AS PrezzoMinimo
+FROM articolo AS a
+
+==========================================================================================================================
+========== 7) Visualizza tutti gli articoli HDD completi di prezzo.
+SELECT a.*
+FROM articolo AS a
+WHERE a.descrizione LIKE "%HDD%"
+
+==========================================================================================================================
+========== 8) Seleziona le sole fatture, con ragione sociale del cliente, in cui sono state venduti almeno 3 diversi articoli, specificando quanti
+SELECT f.Numero AS NumFattura, c.RagioneSociale, COUNT(*) AS ArticoliDiversi
+FROM articolo AS a, fattura AS f, uniscifatart AS u, cliente AS c
+WHERE f.Numero = u.id_fattura 
+	AND u.id_articolo = a.ID_articolo
+    AND c.CodCli = f.CodCli
+GROUP BY f.Numero
+HAVING COUNT(*) >= 3
+
+==========================================================================================================================

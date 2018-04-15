@@ -1,0 +1,24 @@
+******  1  *****************************************************************************************************************************
+SELECT abbonato.CittaResidenza
+FROM abbonato, rivista, abbonamento
+WHERE abbonamento.FK_Abbonato = abbonato.CodAbbonato 
+	AND abbonamento.FK_Rivista = rivista.CodRivista
+    AND rivista.Titolo = 'Corriere'
+
+******  2  *****************************************************************************************************************************
+SELECT rivista.Titolo, rivista.Prezzo 
+FROM rivista
+
+******  3  *****************************************************************************************************************************
+SELECT abbonato.nome, abbonato.Cognome
+FROM abbonato, abbonamento, rivista
+WHERE abbonato.CodAbbonato = abbonamento.FK_Abbonato
+	AND abbonamento.FK_Rivista = rivista.CodRivista
+    AND abbonamento.DataSottoscrizione > '2017-01-01'
+    AND abbonamento.DataSottoscrizione < '2017-04-01'
+
+******  4  *****************************************************************************************************************************
+SELECT rivista.titolo, periodicita.Tipo
+FROM rivista, periodicita
+WHERE rivista.Prezzo > '2,5'
+	AND rivista.FK_Periodicita = periodicita.CodPeriod

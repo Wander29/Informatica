@@ -1,0 +1,38 @@
+******  1  *****************************************************************************************************************************
+SELECT prova.CodProva AS 'Prove_Moroni', prova.FK_Materia, prova.Tipo 
+FROM prova,studente 
+WHERE studente.FK_Classe = prova.FK_Classe 
+	AND studente.Nome = 'Luca' AND studente.Cognome = 'Moroni'
+
+******  2  *****************************************************************************************************************************
+SELECT prova.CodProva AS 'Prova_Diomedi_5AIA', prova.FK_Materia, prova.Tipo 
+FROM prova, docente, unisci_docenteclasse, classe 
+WHERE prova.FK_Docente = docente.CodDocente AND prova.FK_Classe = unisci_docenteclasse.FK_Classe AND unisci_docenteclasse.FK_Docente = docente.CodDocente 
+	AND docente.Nome = 'Chiara' AND classe.Nome = '5AIA'
+
+******  3  *****************************************************************************************************************************
+SELECT unisci_studenteprova.Voto AS 'voti_Luca_Moroni_Informatica' 
+FROM unisci_studenteprova, studente, prova
+WHERE studente.nome = 'Luca' AND studente.Cognome = 'Moroni'
+	AND studente.CodStudente = unisci_studenteprova.FK_Studente AND prova.CodProva = unisci_studenteprova.FK_Prova 
+    	AND prova.FK_Materia = 1
+
+******  4  *****************************************************************************************************************************
+SELECT unisci_studenteprova.Voto AS 'voti_5AIA_Informatica_2017-12-08' 
+FROM unisci_studenteprova, prova, classe, studente
+WHERE classe.Nome = '5AIA' 
+	AND prova.FK_Materia = 1
+    	AND prova.Data = '2017-12-08'
+    	AND unisci_studenteprova.FK_Studente = studente.CodStudente
+    	AND studente.FK_Classe = classe.CodClasse
+    	AND unisci_studenteprova.FK_Prova = prova.CodProva
+
+******  5  *****************************************************************************************************************************
+SELECT prova.Data AS 'Data_Prova_Priante_Informatica', prova.Tipo
+FROM prova
+WHERE prova.FK_Materia = 1 AND prova.FK_Docente = 4
+
+******  6  *****************************************************************************************************************************
+SELECT prova.Data AS 'Data_Prova_Priante_5AIA', prova.Tipo
+FROM prova
+WHERE prova.FK_Classe = 1 AND prova.FK_Docente = 4

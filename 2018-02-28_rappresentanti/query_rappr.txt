@@ -1,0 +1,73 @@
+==========================================================================================================================
+========== 1)
+SELECT cl.RagioneSociale, cl.PIVA
+FROM cliente AS cl, rappresentante AS rap
+WHERE cl.CodRap = rap.CodRap AND rap.CodRap = 2
+
+==========================================================================================================================
+========== 2)
+SELECT COUNT(cl.CodCli)
+FROM cliente AS cl, rappresentante AS rap
+WHERE rap.CodRap = cl.CodRap AND rap.CodRap = 3
+
+==========================================================================================================================
+========== 3)
+SELECT rap.nome, rap.cognome
+FROM cliente AS cl, rappresentante AS rap
+WHERE rap.CodRap = cl.CodRap AND cl.CodCli = 2
+
+==========================================================================================================================
+========== 4)
+SELECT f.NumFatt, f.importo, f.data
+FROM cliente AS cl, fattura AS f
+WHERE cl.CodCli = 2 AND f.CodCli = cl.CodCli
+ORDER BY data ASC
+
+==========================================================================================================================
+========== 5)
+SELECT SUM(f.importo), rap.CodRap 
+FROM fattura AS f, cliente AS cl, rappresentante AS rap 
+WHERE cl.CodRap = rap.CodRap 
+	AND f.CodCli = cl.CodCli 
+GROUP BY rap.CodRap 
+
+==========================================================================================================================
+========== 6)
+SELECT COUNT(f.NumFatt), rap.CodRap
+FROM fattura AS f, cliente AS cl, rappresentante AS rap
+WHERE cl.CodRap = rap.CodRap AND f.CodCli = cl.CodCli
+GROUP BY rap.CodRap
+
+==========================================================================================================================
+========== 7)
+SELECT cl.RagioneSociale, f.data
+FROM fattura AS f, cliente AS cl
+WHERE f.CodCli = cl.CodCli 
+	AND f.importo = (SELECT MAX(f.importo) FROM fattura AS f)
+
+==========================================================================================================================
+========== 8)
+SELECT rap.nome, rap.Cognome
+FROM fattura AS f, cliente AS cl, rappresentante AS rap
+WHERE f.CodCli = cl.CodCli 
+	AND cl.CodRap = rap.CodRap 
+   	AND f.importo = (SELECT MAX(f.importo) FROM fattura AS f)
+
+==========================================================================================================================
+========== 9)
+SELECT cl.CodCli, cl.RagioneSociale
+FROM fattura AS f, cliente AS cl
+WHERE f.CodCli = cl.CodCli
+GROUP BY cl.CodCli
+HAVING SUM(f.importo) > 2100
+
+==========================================================================================================================
+========== 10)
+SELECT rap.CodRap, rap.Nome, rap.Cognome 
+FROM rappresentante AS rap, cliente AS cl, fattura AS f
+WHERE rap.CodRap = cl.CodRap AND f.CodCli = cl.CodCli
+GROUP BY rap.CodRap
+HAVING COUNT(f.NumFatt) > 3
+
+
+
